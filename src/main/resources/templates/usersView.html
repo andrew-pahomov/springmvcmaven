@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Пользователи</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <style>
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 30%;
+        }
+        th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<h2>Пользователи</h2>
+<p/>
+<table style="border: 1px solid #999;">
+    <tbody>
+    <thead>
+    <td th:text="id"/>
+    <td th:text="Имя"/>
+    <td th:text="Фамилия"/>
+    </thead>
+    <tr th:each="user: ${users}">
+        <td th:text="${user.id}"/>
+        <td th:text="${user.firstName}"/>
+        <td th:text="${user.surName}"/>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
