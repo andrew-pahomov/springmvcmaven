@@ -1,6 +1,7 @@
 package ru.otus.qa.stub.springmvc.service;
 
 import org.springframework.stereotype.Service;
+import ru.otus.qa.stub.springmvc.exception.NotFoundException;
 import ru.otus.qa.stub.springmvc.model.AnimalModel;
 
 import java.util.ArrayList;
@@ -19,23 +20,26 @@ public class AnimalService {
         return animals;
     }
 
-    public AnimalModel getAnimalById(Long id){
-        return animals.stream().filter(animal -> animal.getId().equals(id)).findFirst().orElse(null);
+    public AnimalModel getAnimalById(Long id) {
+        return animals.stream()
+                .filter(animal -> animal.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Животное не найдено"));
     }
 
-    public boolean deleteAnimalById(Long id){
-        return animals.remove(getAnimalById(id));
+    public void deleteAnimalById(Long id) {
+        animals.remove(getAnimalById(id));
     }
 
-    public AnimalModel addAnimal(AnimalModel animalModel){
-        animals.stream().map(AnimalModel::getId).max(Long::compareTo).ifPresent(id ->{
+    public AnimalModel addAnimal(AnimalModel animalModel) {
+        animals.stream().map(AnimalModel::getId).max(Long::compareTo).ifPresent(id -> {
             animalModel.setId(id + 1);
             animals.add(animalModel);
         });
         return animalModel;
     }
 
-    public AnimalModel updateAnimalById(Long id, String nickName, String type){
+    public AnimalModel updateAnimalById(Long id, String nickName, String type) {
         AnimalModel animalModel = getAnimalById(id);
         animalModel.setNickName(nickName);
         animalModel.setType(type);

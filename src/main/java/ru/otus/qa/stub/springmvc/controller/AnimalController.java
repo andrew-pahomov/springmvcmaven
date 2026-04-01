@@ -1,9 +1,9 @@
 package ru.otus.qa.stub.springmvc.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.otus.qa.stub.springmvc.exception.NotFoundException;
 import ru.otus.qa.stub.springmvc.model.AnimalModel;
 import ru.otus.qa.stub.springmvc.service.AnimalService;
 
@@ -18,19 +18,24 @@ public class AnimalController {
         this.animalService = animalService;
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ErrorMessage handleException(NotFoundException exception) {
+        return new ErrorMessage(exception.getMessage());
+    }
+
     @RequestMapping(method = RequestMethod.GET)
-    public List<AnimalModel> gatAllAnimals(){
+    public List<AnimalModel> gatAllAnimals() {
         return animalService.getAllAnimals();
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<AnimalModel> getAnimalById(@PathVariable("id") Long id){
-        AnimalModel animalModel = animalService.getAnimalById(id);
-        return new ResponseEntity<>(animalModel, animalModel != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    public AnimalModel getAnimalById(@PathVariable("id") Long id) {
+        return animalService.getAnimalById(id);
     }
 
     @PostMapping
-    public AnimalModel addAnimal(@RequestBody AnimalModel animalModel){
+    public AnimalModel addAnimal(@RequestBody AnimalModel animalModel) {
         return animalService.addAnimal(animalModel);
     }
 
@@ -41,8 +46,8 @@ public class AnimalController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity removeAnimalById(@PathVariable("id") Long id){
-        return new ResponseEntity(animalService.deleteAnimalById(id) ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    public void removeAnimalById(@PathVariable("id") Long id) {
+        animalService.deleteAnimalById(id);
     }
 
 }

@@ -2,6 +2,7 @@ package ru.otus.qa.stub.springmvc.service;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import ru.otus.qa.stub.springmvc.exception.NotFoundException;
 import ru.otus.qa.stub.springmvc.model.UserModel;
 
 import java.util.ArrayList;
@@ -18,7 +19,10 @@ public class UserServiceSimpleImpl implements IUserService {
     }
 
     public UserModel getUserById(long id) {
-        return users.stream().filter(user -> user.getId() == id).findFirst().orElse(null);
+        return users.stream()
+                .filter(user -> user.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
     public List<UserModel> getAllUsers() {

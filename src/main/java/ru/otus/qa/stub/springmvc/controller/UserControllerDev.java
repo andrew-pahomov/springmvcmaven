@@ -1,8 +1,6 @@
 package ru.otus.qa.stub.springmvc.controller;
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.qa.stub.springmvc.model.UserModel;
 import ru.otus.qa.stub.springmvc.service.IUserService;
@@ -10,12 +8,10 @@ import ru.otus.qa.stub.springmvc.service.IUserService;
 @RestController
 @Profile({"dev"})
 @RequestMapping(path = "/users")
-public class UserControllerDev {
-
-    private final IUserService userService;
+public class UserControllerDev extends UserControllerBase {
 
     public UserControllerDev(IUserService userService) {
-        this.userService = userService;
+        super(userService);
     }
 
     @PostMapping()
@@ -24,8 +20,8 @@ public class UserControllerDev {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<HttpStatus> removeUserById(@PathVariable("id") long id) {
-        return new ResponseEntity<>(userService.deleteUserByID(id) ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    public void removeUserById(@PathVariable("id") long id) {
+        userService.deleteUserByID(id);
     }
 
     @PutMapping(path = "/{id}")
@@ -33,4 +29,5 @@ public class UserControllerDev {
                                     @RequestParam("firstName") String firstName, @RequestParam("surName") String surName) {
         return userService.updateUserById(id, firstName, surName);
     }
+
 }

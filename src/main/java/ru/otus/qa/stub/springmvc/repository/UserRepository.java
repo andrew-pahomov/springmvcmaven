@@ -1,6 +1,7 @@
 package ru.otus.qa.stub.springmvc.repository;
 
 import org.springframework.stereotype.Repository;
+import ru.otus.qa.stub.springmvc.exception.NotFoundException;
 import ru.otus.qa.stub.springmvc.model.UserModel;
 
 import java.util.ArrayList;
@@ -11,7 +12,10 @@ public class UserRepository {
     private final ArrayList<UserModel> users = new ArrayList<>();
 
     public UserModel findUserById(long id) {
-        return users.stream().filter(user -> user.getId() == id).findFirst().orElse(null);
+        return users.stream()
+                .filter(user -> user.getId() == id)
+                .findFirst()
+                .orElseThrow(NotFoundException::new);
     }
 
     public List<UserModel> getAllUsers() {
